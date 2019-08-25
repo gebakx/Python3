@@ -21,7 +21,7 @@ Universitat Politècnica de Catalunya, 2019
 
 .cols5050[
 .col1[
-Paradigmes:
+#### Paradigmes:
 
   - imperatiu,
 
@@ -30,7 +30,7 @@ Paradigmes:
   - funcional.
 ]
 .col2[
-Característiques:
+#### Característiques:
 
   - interpretat,
 
