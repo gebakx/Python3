@@ -24,7 +24,7 @@ Aquesta característica ens permet fer programació dinàmica fàcilment:
 
 .col5050[
 .col1[
-Versió recursiva:
+#### Versió recursiva:
 
 ```python3
 def fib(n):
@@ -41,7 +41,7 @@ temps(s): 27.68606
 ```
 ]
 .col2[
-Programació dinàmica:
+#### Programació dinàmica:
 
 ```python3
 def efib (n, mem={0:0, 1:1}):
