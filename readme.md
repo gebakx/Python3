@@ -4,7 +4,13 @@
 
 * [Elements bàsics](basic.html)
 
+* [*Lazyness* i part funcional](pfunc.html)
 
+* [Memorització, clausures i decoradors](decoradors.html)
+
+* [Compiladors amb *antlr4*](compiladors.html)
+
+* [Telegram bots](chatbots.html)
 
 ### Autors
 
