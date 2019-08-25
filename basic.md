@@ -17,7 +17,7 @@ Universitat Politècnica de Catalunya, 2019
 ---
 
 
-# Introducció
+## Introducció
 
 .cols5050[
 .col1[
@@ -43,7 +43,7 @@ Té una gran quantitat de llibreries disponibles.
 
 ---
 
-# Entorns
+## Entorns
 
 ### 'Hello world!'
 
@@ -70,7 +70,7 @@ Utilitza 'utf-8'
 
 ---
 
-# Blocs i comentaris
+## Blocs i comentaris
 
 ### Comentaris
 
@@ -99,7 +99,7 @@ total = x*100 + \
 
 ---
 
-# Variables i assignació
+## Variables i assignació
 
 Declaració implícita (valor): 
 ```python3
@@ -123,7 +123,7 @@ a += 3
 
 ---
 
-# Tipus estàndard
+## Tipus estàndard
 
 ### Nombres
 
@@ -157,7 +157,7 @@ isinstance(3, (float, bool))  👉  False
 
 ---
 
-# Condicionals
+## Condicionals
 
 ### Acció (*statement* ):
 
@@ -178,7 +178,7 @@ x = 'parell' if 5 % 2 == 0 else 'senar'
 
 ---
 
-# Iteracions
+## Iteracions
 
 Taula de multiplicar:
 
@@ -204,7 +204,7 @@ També podem usar el `break` i el `continue`, amb la semàntica usual sobre tots
 
 ---
 
-# Strings I
+## Strings I
 
 Tipus `str`.
 
@@ -231,7 +231,7 @@ len(z)  👉  11         # mida
 
 ---
 
-# Strings II
+## Strings II
 
 ### Altres operacions i mètodes
 
@@ -261,7 +261,7 @@ z[0] = 'l'  ❌   # TypeError: 'str' object does not support item assignment
 
 ---
 
-# Funcions I
+## Funcions I
 
 Declaració:
 
@@ -291,7 +291,7 @@ Quan tornem més d'un valor ho fa internament en forma de *tupla*.
 
 ---
 
-# Funcions II
+## Funcions II
 
 ### Valors per defecte:
 
@@ -314,7 +314,7 @@ remPunc('Hola, sóc un exemple!', tl=False)
 
 ---
 
-# Llistes
+## Llistes
 
 Les llistes (`list`) són heterogènies:
 ```python3
@@ -338,7 +338,7 @@ Altres operacions predefinides de la classe `list`:
 
 ---
 
-# Tuples
+## Tuples
 
 Les tuples (`tuple`) són:
 
@@ -351,7 +351,7 @@ z = (5,)      # tupla d'un sol element
               # (5) és l'enter 5
 ```
 
-# Conjunts
+## Conjunts
 
 Els conjunts (`set`) admeten les operacions: 
 
@@ -361,7 +361,7 @@ Els conjunts (`set`) admeten les operacions:
 
 ---
 
-# Diccionaris
+## Diccionaris
 
 Els diccionaris (`dict`):
 
@@ -388,7 +388,7 @@ suma({'a': 1, 'b': 2})  👉  3
 ```
 ---
 
-# Classes I
+## Classes I
 
 Exemple de classe:
 
@@ -421,7 +421,7 @@ Treballador.treCompt  👉  2
 
 ---
 
-# Classes II
+## Classes II
 
 Podem afegir, eliminar o modificar atributs de classes i objectes en qualsevol
 moment:
@@ -449,7 +449,7 @@ tre1.tre1._Treballador__treCompt  👉  2
 
 ---
 
-# Herència
+## Herència
 
 Exemple:
 
