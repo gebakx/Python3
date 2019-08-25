@@ -8,7 +8,7 @@ Gerard Escudero i Jordi Petit
 
 <br>
 
-![Python 3](python-logo.svg)
+![Python 3](img/python-logo.svg)
 
 <br>
 
