@@ -304,3 +304,19 @@ Té algunes funcions que fan d'iteradors combinatòrics: `product`, `permutation
 És interessant fer un repàs a la documentacio d'aquesta llibreria:
 https://docs.python.org/3.7/library/itertools.html
 
+---
+
+# Exercicis
+
+* Feu aquests problemes de Jutge.org:
+
+  - [P80049](https://jutge.org/problems/P80049_ca) Ús d'iterables
+
+  - [P66679](https://jutge.org/problems/P66679_ca) Llistes per comprensió
+
+  - [P73993](https://jutge.org/problems/P73993_ca) Funcions d'ordre superior
+
+  - [P45231](https://jutge.org/problems/P45231_ca) Generadors
+
+  - [P53498](https://jutge.org/problems/P53498_ca) Definició d'un iterable
+

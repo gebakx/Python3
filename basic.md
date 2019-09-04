@@ -478,3 +478,14 @@ Per fer comprovacions:
 - `issubclass(sub, sup)`
 - `isinstance(obj, Class)`
 
+---
+
+# Exercicis
+
+* Feu aquests problemes de Jutge.org:
+
+  - [P84591](https://jutge.org/problems/P84591_ca) Funcions amb nombres
+
+  - [P51956](https://jutge.org/problems/P51956_ca) Funcions amb llistes
+
+  - [P71608](https://jutge.org/problems/P71608_ca) Classe per arbres 
