@@ -188,6 +188,7 @@ Taula de multiplicar:
 n, i = int(input('n? ')), 1
 while i <= 10:
     print(n, 'x', i, '=', n * i)
+    i += 1
 ```
 
 ### for
@@ -248,7 +249,7 @@ z.count('e')  👉  2               # comptar
 
 'Hello world!\n'.strip()  👉  'Hello world!'   # treu el \n
 
-'1,2,3'.split(' ')  👉  ['1', '2', '3']    # parteix un string
+'1,2,3'.split(',')  👉  ['1', '2', '3']    # parteix un string
 
 ','.join(['1', '2', '3'])  👉  '1,2,3'     # operació inversa
 ```
