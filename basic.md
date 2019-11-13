@@ -268,7 +268,7 @@ Declaració:
 
 ```python3
 def primer(n):
-    for d in range(2, n // 2):
+    for d in range(2, n // 2 + 1):
         if n % d == 0:
             return False
     return True
@@ -460,7 +460,7 @@ class Fill(Treballador):    # pare entre ( )
         print(’Cridem al metode del fill’)
 
 tre3 = Fill('Manel', 1000)
-tre2.fillMetode()
+tre3.fillMetode()
 ```
 
 Podem tenir herència múltiple:

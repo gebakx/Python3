@@ -143,7 +143,7 @@ class fib3:
 ```
 
 ```python3
-[x for x in fibo(8)]
+[x for x in fib3(8)]
 👉
 [0, 1, 1, 2, 3, 5, 8]
 ```
