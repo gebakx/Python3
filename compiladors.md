@@ -31,17 +31,17 @@ expr : expr MES expr
     ;
 
 NUM : [0-9]+ ;
-MES : ’+’ ;
+MES : '+' ;
 WS : [ \n]+ -> skip ;
 ```
 
-⚠️ Noteu que el nom de l’arxiu ha de concordar amb el de la gramàtica.
+⚠️ Noteu que el nom de l'arxiu ha de concordar amb el de la gramàtica.
 
 * `expr`: definició de la gramàtica per la suma de nombres naturals. 
 
-* `skip`: indica a l’escàner que el token WS no ha d’arribar al parser.
+* `skip`: indica a l'escàner que el token WS no ha d'arribar al parser.
 
-* `root`: per processar el final d’arxiu.
+* `root`: per processar el final d'arxiu.
 
 ---
 
@@ -63,7 +63,7 @@ genera els arxius:
 
 ---
 
-## Construcció de l’script principal
+## Construcció de l'script principal
 
 Script de test:
 
@@ -77,7 +77,7 @@ from antlr4.InputStream import InputStream
 if len(sys.argv) > 1:
     input_stream = FileStream(sys.argv[1])
 else:
-    input_stream = InputStream(input(’? ’))
+    input_stream = InputStream(input('? '))
 
 lexer = ExprLexer(input_stream)
 token_stream = CommonTokenStream(lexer)
@@ -86,7 +86,7 @@ tree = parser.root()
 print(tree.toStringTree(recog=parser))
 ```
 
-Noteu que aquest script llegeix l’entrada estàndard o un arxiu de text.
+Noteu que aquest script llegeix l'entrada estàndard o un arxiu de text.
 
 Test: `3 + 4  👉  (root (expr (expr 3) + (expr 4)) <EOF>)`
 
@@ -96,22 +96,22 @@ Què passa amb: `3 + +`, `3 3` o `3 + 4 + 5`?
 
 ## Notes sobre gramàtiques
 
-#### Recursivitat per l’esquerra:
+#### Recursivitat per l'esquerra:
 
-Amb les versions anteriors no es podia afegir una regla de l’estil: <br>
-`expr : expr ’*’ expr`
+Amb les versions anteriors no es podia afegir una regla de l'estil: <br>
+`expr : expr '*' expr`
 
-Per solucionar això s’afegien regles tipus 
-`expr : NUM ’*’ expr`
+Per solucionar això s'afegien regles tipus 
+`expr : NUM '*' expr`
 
 .col5050[
 .col1[
-#### Precedència d’operadors:
+#### Precedència d'operadors:
 
 Amb l'ordre d'escriptura:
 ```
-expr : expr ’*’ expr
-     | expr ’+’ expr
+expr : expr '*' expr
+     | expr '+' expr
      | INT
      ;
 ```
@@ -119,9 +119,9 @@ expr : expr ’*’ expr
 .col2[
 #### Associativitat:
 
-L’associativitat com la potència <br> queda com:
+L'associativitat com la potència <br> queda com:
 ```
-expr : expr ’^’<assoc=right> expr
+expr : expr '^'<assoc=right> expr
      | INT
      ;
 ```
@@ -142,7 +142,7 @@ Afegiu a la gramàtica els operadors de:
 * potència
 
 Tingueu en compte:
-* la precedència d’operadors 
+* la precedència d'operadors 
 
 * la associativitat a la dreta dela potència
 
@@ -196,10 +196,10 @@ class ExprVisitor(ParseTreeVisitor):
             n = next(ctx.getChildren())
             print(" " * self.nivell + \
                   ExprParser.symbolicNames[n.getSymbol().type] + \
-                  ’(’ +n.getText() + ’)’)
+                  '(' +n.getText() + ')')
             self.nivell -= 1
         elif ctx.getChildCount() == 3:
-            print(’ ’ * self.nivell + ’MES(+)’)
+            print(' ' * self.nivell + 'MES(+)')
             self.nivell += 1
             self.visit(ctx.expr(0))
             self.nivell += 1
@@ -246,7 +246,7 @@ from ExprVisitor import ExprVisitor
 if len(sys.argv) > 1:
     input_stream = FileStream(sys.argv[1])
 else:
-    input_stream = InputStream(input(’? ’))
+    input_stream = InputStream(input('? '))
 
 lexer = ExprLexer(input_stream)
 token_stream = CommonTokenStream(lexer)
@@ -273,11 +273,11 @@ MES(+)
 
 ## Exercici 2
 
-Afegiu el mecanisme per mostrar l’arbre generat a la gramàtica <br> de l’exercici 1.
+Afegiu el mecanisme per mostrar l'arbre generat a la gramàtica <br> de l'exercici 1.
 
 ---
 
-## Avaluació i interpretació d’ASTs
+## Avaluació i interpretació d'ASTs
 
 *Visitor* per avaluar les expressions:
 
@@ -308,11 +308,11 @@ Exemple:
 
 ## Exercici 3
 
-Afegiu el tractament d’avaluació per la resta d’operadors de l'exercici 3.
+Afegiu el tractament d'avaluació per la resta d'operadors de l'exercici 3.
 
 ## Exercici 4
 
-Definiu una gramàtica i el seu mecanisme d’avaluació/execució per a quelcom tipus:
+Definiu una gramàtica i el seu mecanisme d'avaluació/execució per a quelcom tipus:
 ```
 x := 3 + 5
 write x
@@ -324,7 +324,7 @@ Nota: es pot utilitzar un diccionari com a taula de símbols.
 
 ## Exercici 5
 
-Amplieu l’exercici anterior per a que tracti quelcom com el següent:
+Amplieu l'exercici anterior per a que tracti quelcom com el següent:
 ```
 c := 0
 b := c + 5
@@ -337,11 +337,11 @@ endif
 
 ## Exercici 6
 
-Exploreu que passa si realitzem l’exercici anterior sense el token `endif`.
+Exploreu que passa si realitzem l'exercici anterior sense el token `endif`.
 
 ## Exercici 7
 
-Amplieu l’exercici anterior per a que tracti l’estructura `while`:
+Amplieu l'exercici anterior per a que tracti l'estructura `while`:
 ```
 i := 1
 while i <> 11 do
@@ -359,4 +359,4 @@ endwhile
 2. Alan Hohn. *ANTLR4 Python Example*. Últim accés: 26/1/2019.
 https://github.com/AlanHohn/antlr4-python
 
-3. Guillem Godoy i Ramón Ferrer. *Parsing and AST cosntruction with PCCTS*. Materials d’LP, 2011.
+3. Guillem Godoy i Ramón Ferrer. *Parsing and AST cosntruction with PCCTS*. Materials d'LP, 2011.
