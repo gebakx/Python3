@@ -17,6 +17,29 @@ Universitat Politècnica de Catalunya, 2019
 
 ---
 
+## Instal·lació del ANTLR4 (per Python)
+
+
+#### Requeriments:
+
+- [Python 3](https://www.python.org)
+
+#### Instruccions:
+
+- Download the [ANTLR4](https://www.antlr.org) jar file:
+
+  * [jar file](https://www.antlr.org/download/antlr-4.7.1-complete.jar)
+
+  * [Getting started](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md)
+
+- Install python runtime:
+
+  * `pip3 install antlr4-python3-runtime` or
+
+  * `pip install antlr4-python3-runtime`
+
+---
+
 ## El primer programa ANTLR
 
 Arxiu de gramàtica `Expr.g`:
