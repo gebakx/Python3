@@ -168,7 +168,7 @@ def fib(n):
 # Com que la funció és recursiva hem de redefinir la funció
 test40 = test(40)
 fib = memoritza(fib)
-test40(fib, 40)
+test40(fib)
 👉
 valor: 102334155
 temps(s): 0.00018
