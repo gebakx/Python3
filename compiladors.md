@@ -144,7 +144,7 @@ expr : expr '*' expr
 
 L'associativitat com la potència <br> queda com:
 ```
-expr : expr '^'<assoc=right> expr
+expr : <assoc=right> expr '^' expr
      | INT
      ;
 ```
