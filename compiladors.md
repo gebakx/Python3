@@ -95,12 +95,8 @@ import sys
 from antlr4 import *
 from ExprLexer import ExprLexer
 from ExprParser import ExprParser
-from antlr4.InputStream import InputStream
 
-if len(sys.argv) > 1:
-    input_stream = FileStream(sys.argv[1])
-else:
-    input_stream = InputStream(input('? '))
+input_stream = InputStream(input('? '))
 
 lexer = ExprLexer(input_stream)
 token_stream = CommonTokenStream(lexer)
@@ -109,11 +105,42 @@ tree = parser.root()
 print(tree.toStringTree(recog=parser))
 ```
 
-Noteu que aquest script llegeix l'entrada estàndard o un arxiu de text.
+Noteu que aquest script processa una única linia entrada per consola.
 
 Test: `3 + 4  👉  (root (expr (expr 3) + (expr 4)) <EOF>)`
 
 Què passa amb: `3 + +`, `3 3` o `3 + 4 + 5`?
+
+---
+
+## Notes sobre l'entrada
+
+#### una única linia
+```python3
+input_stream = InputStream(input('? '))
+```
+
+#### stdin
+```python3
+input_stream = StdinStream()
+```
+
+#### un arxiu passat com a paràmetre
+```python3
+input_stream = FileStream(sys.argv[1])
+```
+
+#### arxius amb accents
+```python3
+input_stream = FileStream(sys.argv[1], encoding='utf-8')
+```
+
+En aquest cas haurem d'incloure a la gramàtica aquest tipus de caràcters:
+```python3
+WORD : [a-zA-Z\u0080-\u00FF]+ ;
+```
+
+
 
 ---
 
@@ -205,32 +232,33 @@ del ExprParser
 
 ## Visitor per recorrer l'arbre
 
-Codi d'un *visitor* per mostrar l'arbre:
+Codi d'un *visitor* per mostrar l'arbre heredant de la plantilla anterior:
 
 ```python3
-...
+from ExprParser import ExprParser
+from ExprVisitor import ExprVisitor
 
-class ExprVisitor(ParseTreeVisitor):
+class TreeVisitor(ExprVisitor):
     def __init__(self):
-        self.nivell = 0  # nivell de profunditat del node
+        self.nivell = 0
 
     def visitExpr(self, ctx:ExprParser.ExprContext):
         if ctx.getChildCount() == 1:
             n = next(ctx.getChildren())
-            print(" " * self.nivell + \
-                  ExprParser.symbolicNames[n.getSymbol().type] + \
+            print("  " * self.nivell +
+                  ExprParser.symbolicNames[n.getSymbol().type] +
                   '(' +n.getText() + ')')
             self.nivell -= 1
         elif ctx.getChildCount() == 3:
-            print(' ' * self.nivell + 'MES(+)')
+            print('  ' *  self.nivell + 'MES(+)')
             self.nivell += 1
             self.visit(ctx.expr(0))
             self.nivell += 1
             self.visit(ctx.expr(1))
             self.nivell -= 1
-
-#del ExprParser
 ```
+
+L'arxiu l'hem anomenat `TreeVisitor.py`.
 
 ---
 
@@ -263,20 +291,16 @@ import sys
 from antlr4 import *
 from ExprLexer import ExprLexer
 from ExprParser import ExprParser
-from antlr4.InputStream import InputStream
-from ExprVisitor import ExprVisitor
+from TreeVisitor import TreeVisitor
 
-if len(sys.argv) > 1:
-    input_stream = FileStream(sys.argv[1])
-else:
-    input_stream = InputStream(input('? '))
+input_stream = InputStream(input('? '))
 
 lexer = ExprLexer(input_stream)
 token_stream = CommonTokenStream(lexer)
 parser = ExprParser(token_stream)
-tree = parser.root()
+tree = parser.root() 
 
-visitor = ExprVisitor()
+visitor = TreeVisitor()
 visitor.visit(tree)
 ```
 
@@ -305,22 +329,20 @@ Afegiu el mecanisme per mostrar l'arbre generat a la gramàtica <br> de l'exerci
 *Visitor* per avaluar les expressions:
 
 ```python3
-...
-class ExprVisitor(ParseTreeVisitor):
+from ExprParser import ExprParser
+from ExprVisitor import ExprVisitor
+
+class EvalVisitor(ExprVisitor):
     def visitRoot(self, ctx:ExprParser.RootContext):
-        n = next(ctx.getChildren())
+        n = next(ctx.getChildren())        
         print(self.visit(n))
 
     def visitExpr(self, ctx:ExprParser.ExprContext):
-        if ctx.getChildCount() == 1:
-            n = next(ctx.getChildren())
-            return int(n.getText())
-        elif ctx.getChildCount() == 3:
-            g = ctx.getChildren()
-            l = [next(g) for i in range(3)]
+        l = [n for n in ctx.getChildren()]        
+        if len(l) == 1:
+            return int(l[0].getText())
+        elif len(l) == 3:
             return self.visit(l[0]) + self.visit(l[2])
-
-del ExprParser
 ```
 
 Exemple:

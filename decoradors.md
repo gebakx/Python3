@@ -269,5 +269,24 @@ temps(s): 0.13049
 ]
 ]
 
+---
+
+# Memorització genèrica amb decoradors
+
+```python3
+def memoritza (f):
+    mem = {}
+    def f2 (x):
+        if x not in mem:
+            mem[x] = f(x)
+        return mem[x]
+    return f2
+
+@memoritza
+def fib(n):
+    if n in [0, 1]:
+        return n
+    return fib(n-1) + fib(n-2)
+```
 
 
