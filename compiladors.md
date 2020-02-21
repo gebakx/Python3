@@ -235,8 +235,12 @@ del ExprParser
 Codi d'un *visitor* per mostrar l'arbre heredant de la plantilla anterior:
 
 ```python3
-from ExprParser import ExprParser
-from ExprVisitor import ExprVisitor
+if __name__ is not None and "." in __name__:
+    from .ExprParser import ExprParser
+    from .ExprVisitor import ExprVisitor
+else:
+    from ExprParser import ExprParser
+    from ExprVisitor import ExprVisitor
 
 class TreeVisitor(ExprVisitor):
     def __init__(self):
@@ -329,8 +333,12 @@ Afegiu el mecanisme per mostrar l'arbre generat a la gramàtica <br> de l'exerci
 *Visitor* per avaluar les expressions:
 
 ```python3
-from ExprParser import ExprParser
-from ExprVisitor import ExprVisitor
+if __name__ is not None and "." in __name__:
+    from .ExprParser import ExprParser
+    from .ExprVisitor import ExprVisitor
+else:
+    from ExprParser import ExprParser
+    from ExprVisitor import ExprVisitor
 
 class EvalVisitor(ExprVisitor):
     def visitRoot(self, ctx:ExprParser.RootContext):
