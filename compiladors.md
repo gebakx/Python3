@@ -283,6 +283,9 @@ Altres mètodes interessants:
 * `ExprParser.MES`: índex intern del token MES per al parser. Es
 sol utilitzar junt amb `n.getSymbol().type`
 
+Informació adicional:
+
+* quan un node pertany a la part lèxica conté l'atribut `getSymbol` i quan pertany a la part sintàctica l'atribut `getRuleIndex`. 
 
 ---
 
