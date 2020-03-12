@@ -45,26 +45,25 @@ Guardeu l'*access token* en un arxiu <br> `token.txt`.
 # Exemple de codi
 
 ```python3
-# importing Telegram API
-from telegram.ext import Updater
-from telegram.ext import CommandHandler
+# importa l'API de Telegram
+from telegram.ext import Updater, CommandHandler
 
-# defining callback function for the /start command
-def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Hello world!")
+# defineix una funció que saluda i que s'executarà quan el bot rebi el missatge /start
+def start(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, text="Hello World!")
 
-# loading the access token from token.txt
+# declara una constant amb el access token que llegeix de token.txt
 TOKEN = open('token.txt').read().strip()
 
-# call main Telegram objects
-updater = Updater(token=TOKEN)
-dispatcher = updater.dispatcher
+# crea objecte per treballar amb Telegram
+updater = Updater(token=TOKEN, use_context=True)
 
-# handling callbacks functions to the commands
-dispatcher.add_handler(CommandHandler('start', start))
+# indica que quan el bot rebi la comanda /start s'executi la funció start
+updater.dispatcher.add_handler(CommandHandler('start', start))
 
-# starting the bot
+# engega el bot
 updater.start_polling()
+
 ```
 
 ---
@@ -79,14 +78,14 @@ Bot traductor amb `/tr`:
 from googletrans import Translator
 ...
 # defining callback function for the /tr command
-def tr(bot, update):
+def tr(update, context):
     translator = Translator()
     msg = update.message.text[3:] # delete "/tr "
     msg_tr = translator.translate(msg).text
-    bot.send_message(chat_id=update.message.chat_id, text=msg_tr)
+    context.bot.send_message(chat_id=update.message.chat_id, text=msg_tr)
 ...
 # handling callbacks functions to the commands
-dispatcher.add_handler(CommandHandler('tr', tr))
+updater.dispatcher.add_handler(CommandHandler('tr', tr))
 ...
 ```
 
@@ -101,15 +100,15 @@ Tracta cada paraula del missatge com un argument:
 ```python3
 ...
 # defining callback function for the /tr command
-def tr(bot, update, args):
+def tr(update, context):
     translator = Translator()
-    msg = " ".join(args)
-    msg_tr = translator.translate(msg).text
-    bot.send_message(chat_id=update.message.chat_id, text=msg_tr)
+    miss_orig = ' '.join(context.args)
+    miss_trad = translator.translate(miss_orig).text
+    context.bot.send_message(chat_id=update.message.chat_id, text=miss_trad)
 ...
 
 # handling callbacks functions to the commands
-dispatcher.add_handler(CommandHandler('tr', tr, pass_args=True))
+updater.dispatcher.add_handler(CommandHandler('tr', tr, pass_args=True))
 ...
 ```
 
@@ -123,22 +122,18 @@ Utilitza el diccionari `user_data` per guardar informació de la conversa:
 
 ```python3
 ...
-def tr(bot, update, args, user_data):
-    if 'counter' not in user_data:
-        user_data['counter'] = 0
-    user_data['counter'] += 1
+def tr(update, context):
+    if 'counter' not in context.user_data:
+        context.user_data['counter'] = 0
+    context.user_data['counter'] += 1
 
     translator = Translator()
-    msg = " ".join(args)
-    msg_tr = translator.translate(msg).text
-    bot.send_message(chat_id=update.message.chat_id, text=msg_tr)
-    report = str(user_data['counter']) + translations\nfor user ' + \
+    miss_orig = ' '.join(context.args)
+    miss_trad = translator.translate(miss_orig).text
+    context.bot.send_message(chat_id=update.message.chat_id, text=miss_trad)
+    report = str(context.user_data['counter']) + translations\nfor user ' + \
              update.message.chat.first_name
-    bot.send_message(chat_id=update.message.chat_id, text=report)
-...
-
-dispatcher.add_handler(CommandHandler('tr', tr, pass_args=True, \
-                       pass_user_data=True))
+    context.bot.send_message(chat_id=update.message.chat_id, text=report)
 ...
 ```
 
@@ -158,22 +153,15 @@ Canvia la forma del *callback*!
 ...
 from telegram.ext import MessageHandler, Filters
 ...
-def tr(bot, update, user_data):
-    if 'counter' not in user_data:
-        user_data['counter'] = 0
-    user_data['counter'] += 1
+def tr(update, context):
     translator = Translator()
     msg = update.message.text
     msg_tr = translator.translate(msg).text
-    bot.send_message(chat_id=update.message.chat_id, text=msg_tr)
-    report = str(user_data['counter']) + ' translations\nfor user ' + \
-             update.message.chat.first_name
-    bot.send_message(chat_id=update.message.chat_id, text=report)
+    context.bot.send_message(chat_id=update.message.chat_id, text=msg_tr)
 ...
 
 # handling callbacks functions to the commands
-dispatcher.add_handler(MessageHandler(Filters.text, tr, \
-                       pass_user_data=True))
+updater.dispatcher.add_handler(MessageHandler(Filters.text, tr))
 ...
 ```
 ---
@@ -192,18 +180,18 @@ A l'exemple s'envia una foto desde *url*, una des d'arxiu i un text en *markdown
 ...
 from telegram import ParseMode
 
-def start(bot, update):
+def start(update, context):
     info = '''
 Written in MarkDown:
 - *bold*
 - _italic_
 '''
-    bot.send_photo(chat_id=update.message.chat_id, \
+    context.bot.send_photo(chat_id=update.message.chat_id, \
          photo='https://www.upc.edu/++theme++homeupc/assets/images/' + \
          'logomark.png')
-    bot.send_photo(chat_id=update.message.chat_id, \
+    context.bot.send_photo(chat_id=update.message.chat_id, \
          photo=open('t_logo.png', 'rb'))
-    bot.send_message(chat_id=update.message.chat_id, text=info, \
+    context.bot.send_message(chat_id=update.message.chat_id, text=info, \
          parse_mode=ParseMode.MARKDOWN)
 ...
 ```
@@ -228,21 +216,19 @@ import os
 from staticmap import StaticMap, CircleMarker
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, \
+def start(update, context):
+    context.bot.send_message(chat_id=update.message.chat_id, \
                      text="Send me your location!")
 
-def where(bot, update, user_data):
+def where(update, context):
     ...
 
 TOKEN = open('token.txt').read().strip()
 
 updater = Updater(token=TOKEN)
-dispatcher = updater.dispatcher
 
-dispatcher.add_handler(CommandHandler('start', start))
-dispatcher.add_handler(MessageHandler(Filters.location, where, \
-                       pass_user_data=True))
+updater.dispatcher.add_handler(CommandHandler('start', start))
+updater.dispatcher.add_handler(MessageHandler(Filters.location, where))
 
 updater.start_polling()
 ```
@@ -252,7 +238,7 @@ updater.start_polling()
 # Mapes i localització II
 
 ```python3
-def where(bot, update, user_data):
+def where(update, context):
     try:
         name = "%d.png" % random.randint(1000000, 9999999)
         lat, lon = update.message.location.latitude,
@@ -261,12 +247,12 @@ def where(bot, update, user_data):
         mapa.add_marker(CircleMarker((lon, lat), 'blue', 10))
         imatge = mapa.render()
         imatge.save(name)
-        bot.send_photo(chat_id=update.message.chat_id, \
+        context.bot.send_photo(chat_id=update.message.chat_id, \
                        photo=open(name, 'rb'))
         os.remove(name)
     except Exception as e:
         print(e)
-        bot.send_message(chat_id=update.message.chat_id, \
+        context.bot.send_message(chat_id=update.message.chat_id, \
                          text='Something goes wrong!')
 ```
 
@@ -283,26 +269,24 @@ def where(bot, update, user_data):
 # nltk I
 
 ```python3
-from telegram.ext import Updater
-from telegram.ext import MessageHandler, Filters
+from telegram.ext import Updater, MessageHandler, Filters
 from nltk import word_tokenize, pos_tag, ne_chunk
 from nltk.tree import Tree
 
 def Tree2Str(t):
     ...
 
-def psr(bot, update):
+def psr(update, context):
     sentence = update.message.text
     res = ne_chunk(pos_tag(word_tokenize(sentence))) # nltk
     s = '\n'.join(Tree2Str(res))
-    bot.send_message(chat_id=update.message.chat_id, text=s)
+    context.bot.send_message(chat_id=update.message.chat_id, text=s)
 
 TOKEN = open('token.txt').read().strip()
 
 updater = Updater(token=TOKEN)
-dispatcher = updater.dispatcher
 
-dispatcher.add_handler(MessageHandler(Filters.text, psr))
+updater.dispatcher.add_handler(MessageHandler(Filters.text, psr))
 
 updater.start_polling()
 ```
