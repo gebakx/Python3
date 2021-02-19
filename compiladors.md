@@ -91,7 +91,6 @@ genera els arxius:
 Script de test:
 
 ```python3
-import sys
 from antlr4 import *
 from ExprLexer import ExprLexer
 from ExprParser import ExprParser
@@ -246,18 +245,16 @@ class TreeVisitor(ExprVisitor):
     def __init__(self):
         self.nivell = 0
 
-    def visitExpr(self, ctx:ExprParser.ExprContext):
+    def visitExpr(self, ctx):
         l = list(ctx.getChildren())
         if len(l) == 1:
             print("  " * self.nivell +
                   ExprParser.symbolicNames[l[0].getSymbol().type] +
                   '(' +l[0].getText() + ')')
-            self.nivell -= 1
-        elif len(l)== 3:
+        else:  # len(l) == 3
             print('  ' *  self.nivell + 'MES(+)')
             self.nivell += 1
             self.visit(l[0])
-            self.nivell += 1
             self.visit(l[2])
             self.nivell -= 1
 ```
@@ -269,7 +266,7 @@ class TreeVisitor(ExprVisitor):
 Accés als components de la part dreta de la regla:
 .small[
 * amb els fills: `ctx.getChildren()` (és un generador)
-  - `l = list(ctx.getChildren())` ó
+  - `l = list(ctx.getChildren())` o
   - `op1, op, op2 = list(ctx.getChildren())`
 ]
 
@@ -298,7 +295,6 @@ Informació adicional:
 L'arxiu de test l'hem de modificar:
 
 ```python3
-import sys
 from antlr4 import *
 from ExprLexer import ExprLexer
 from ExprParser import ExprParser
@@ -375,21 +371,19 @@ class TreeVisitor(ExprVisitor):
     def __init__(self):
         self.nivell = 0
 
-    def visitSuma(self, ctx:ExprParser.SumaContext):
+    def visitSuma(self, ctx):
         l = list(ctx.getChildren())
         print('  ' *  self.nivell + 'MES(+)')
         self.nivell += 1
         self.visit(l[0])
-        self.nivell += 1
         self.visit(l[2])
         self.nivell -= 1
 
-    def visitValor(self, ctx:ExprParser.ValorContext):
+    def visitValor(self, ctx):
         l = list(ctx.getChildren())
         print("  " * self.nivell +
               ExprParser.symbolicNames[l[0].getSymbol().type] +
               '(' +l[0].getText() + ')')
-        self.nivell -= 1
 ```
 
 ---
@@ -407,15 +401,15 @@ else:
     from ExprVisitor import ExprVisitor
 
 class EvalVisitor(ExprVisitor):
-    def visitRoot(self, ctx:ExprParser.RootContext):
+    def visitRoot(self, ctx):
         l = list(ctx.getChildren())        
         print(self.visit(l[0]))
 
-    def visitExpr(self, ctx:ExprParser.ExprContext):
+    def visitExpr(self, ctx):
         l = list(ctx.getChildren())
         if len(l) == 1:
             return int(l[0].getText())
-        elif len(l) == 3:
+        else:  # len(l) == 3
             return self.visit(l[0]) + self.visit(l[2])
 ```
 
