@@ -231,8 +231,9 @@ del ExprParser
 
 ## Visitor per recorrer l'arbre
 
-Codi d'un *visitor* `TreeVisitor.py` per mostrar l'arbre heredant de la plantilla anterior:
+Codi d'un *visitor* `TreeVisitor.py` per mostrar l'arbre heredant de la plantilla:
 
+.small[
 ```python3
 if __name__ is not None and "." in __name__:
     from .ExprParser import ExprParser
@@ -258,6 +259,7 @@ class TreeVisitor(ExprVisitor):
             self.visit(l[2])
             self.nivell -= 1
 ```
+]
 
 ---
 
