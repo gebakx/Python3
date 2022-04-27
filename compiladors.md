@@ -28,7 +28,7 @@ Universitat Politècnica de Catalunya, 2019
 
 - Download the [ANTLR4](https://www.antlr.org) jar file:
 
-  * [jar file](https://www.antlr.org/download/antlr-4.7.1-complete.jar)
+  * [jar file](https://www.antlr.org/download/antlr-4.10.1-complete.jar)
 
   * [Getting started](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md)
 
