@@ -50,6 +50,8 @@
   .cyan { color: rgb(0, 255, 255) }
 
   .large { font-size: 1.25em; }
+  .small { font-size: 0.8em; }
+
   a, a > code {
     color: rgb(249, 38, 114);
     text-decoration: none;

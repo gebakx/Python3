@@ -91,7 +91,6 @@ genera els arxius:
 Script de test:
 
 ```python3
-import sys
 from antlr4 import *
 from ExprLexer import ExprLexer
 from ExprParser import ExprParser
@@ -194,7 +193,7 @@ Afegiu a la gramàtica els operadors de:
 Tingueu en compte:
 * la precedència d'operadors 
 
-* la associativitat a la dreta dela potència
+* la associativitat a la dreta de la potència
 
 ---
 
@@ -232,8 +231,9 @@ del ExprParser
 
 ## Visitor per recorrer l'arbre
 
-Codi d'un *visitor* per mostrar l'arbre heredant de la plantilla anterior:
+Codi d'un *visitor* `TreeVisitor.py` per mostrar l'arbre heredant de la plantilla:
 
+.small[
 ```python3
 if __name__ is not None and "." in __name__:
     from .ExprParser import ExprParser
@@ -246,46 +246,49 @@ class TreeVisitor(ExprVisitor):
     def __init__(self):
         self.nivell = 0
 
-    def visitExpr(self, ctx:ExprParser.ExprContext):
-        if ctx.getChildCount() == 1:
-            n = next(ctx.getChildren())
+    def visitExpr(self, ctx):
+        l = list(ctx.getChildren())
+        if len(l) == 1:
             print("  " * self.nivell +
-                  ExprParser.symbolicNames[n.getSymbol().type] +
-                  '(' +n.getText() + ')')
-            self.nivell -= 1
-        elif ctx.getChildCount() == 3:
+                  ExprParser.symbolicNames[l[0].getSymbol().type] +
+                  '(' +l[0].getText() + ')')
+        else:  # len(l) == 3
             print('  ' *  self.nivell + 'MES(+)')
             self.nivell += 1
-            self.visit(ctx.expr(0))
-            self.nivell += 1
-            self.visit(ctx.expr(1))
+            self.visit(l[0])
+            self.visit(l[2])
             self.nivell -= 1
 ```
-
-L'arxiu l'hem anomenat `TreeVisitor.py`.
+]
 
 ---
 
 ## Informació per crear *visitors*
 
 Accés als components de la part dreta de la regla:
-
-* amb els fills: `ctx.getChildCount()` i `ctx.getChildren()` (és un generador)
-
-* els propis components: `ctx.expr(0)` correspon al 1er node *expr* de la regla
+.small[
+* amb els fills: `ctx.getChildren()` (és un generador)
+  - `l = list(ctx.getChildren())` o
+  - `op1, op, op2 = list(ctx.getChildren())`
+]
 
 Altres mètodes interessants:
-
+.small[
 * `n.getText()`: text del node
 
 * `ExprParser.symbolicNames[n.getSymbol().type]`: token del node en format text
 
 * `ExprParser.MES`: índex intern del token MES per al parser. Es
 sol utilitzar junt amb `n.getSymbol().type`
+]
 
 Informació adicional:
+.small[
+* podem intercanviar informació amb un visitor mitjançant el constructor `__init__` i fent que el mètode de la *regla arrel* torni quelcom 
+  * Exemple d'ús: persistència de taula de símbols entre diferents *visitors*
 
 * quan un node pertany a la part lèxica conté l'atribut `getSymbol` i quan pertany a la part sintàctica l'atribut `getRuleIndex`. 
+]
 
 ---
 
@@ -294,7 +297,6 @@ Informació adicional:
 L'arxiu de test l'hem de modificar:
 
 ```python3
-import sys
 from antlr4 import *
 from ExprLexer import ExprLexer
 from ExprParser import ExprParser
@@ -331,6 +333,63 @@ Afegiu el mecanisme per mostrar l'arbre generat a la gramàtica <br> de l'exerci
 
 ---
 
+## Ús d'etiquetes en les gramàtiques ANTLR4
+
+Les etiquetes són un mecanisme que ens ajuden a clarificar el codi. 
+
+Donada la gramàtica següent:
+
+```
+grammar Expr;
+
+root : expr EOF ;
+
+expr : expr MES expr # Suma
+     | NUM           # Valor
+     ;
+
+NUM : [0-9]+ ;
+MES : '+' ;
+WS  : [ \n]+ -> skip ; 
+```
+
+L'ANTLR ens generarà un mètode per la producció `Suma` i un altre per `Valor` en el *visitor*.
+
+Nota: en una regla de la gramàtica han de ser totes les produccions amb etiquetes o cap.
+
+---
+
+## Visitor amb etiquetes
+
+```python3
+if __name__ is not None and "." in __name__:
+    from .ExprParser import ExprParser
+    from .ExprVisitor import ExprVisitor
+else:
+    from ExprParser import ExprParser
+    from ExprVisitor import ExprVisitor
+
+class TreeVisitor(ExprVisitor):
+    def __init__(self):
+        self.nivell = 0
+
+    def visitSuma(self, ctx):
+        l = list(ctx.getChildren())
+        print('  ' *  self.nivell + 'MES(+)')
+        self.nivell += 1
+        self.visit(l[0])
+        self.visit(l[2])
+        self.nivell -= 1
+
+    def visitValor(self, ctx):
+        l = list(ctx.getChildren())
+        print("  " * self.nivell +
+              ExprParser.symbolicNames[l[0].getSymbol().type] +
+              '(' +l[0].getText() + ')')
+```
+
+---
+
 ## Avaluació i interpretació d'ASTs
 
 *Visitor* per avaluar les expressions:
@@ -344,15 +403,15 @@ else:
     from ExprVisitor import ExprVisitor
 
 class EvalVisitor(ExprVisitor):
-    def visitRoot(self, ctx:ExprParser.RootContext):
-        n = next(ctx.getChildren())        
-        print(self.visit(n))
+    def visitRoot(self, ctx):
+        l = list(ctx.getChildren())        
+        print(self.visit(l[0]))
 
-    def visitExpr(self, ctx:ExprParser.ExprContext):
-        l = [n for n in ctx.getChildren()]        
+    def visitExpr(self, ctx):
+        l = list(ctx.getChildren())
         if len(l) == 1:
             return int(l[0].getText())
-        elif len(l) == 3:
+        else:  # len(l) == 3
             return self.visit(l[0]) + self.visit(l[2])
 ```
 
@@ -386,14 +445,14 @@ c := 0
 b := c + 5
 if c = 0 then
     write b
-endif
+end
 ```
 
 ---
 
 ## Exercici 6
 
-Exploreu que passa si realitzem l'exercici anterior sense el token `endif`.
+Exploreu que passa si realitzem l'exercici anterior sense el token `end`.
 
 ## Exercici 7
 
@@ -403,8 +462,81 @@ i := 1
 while i <> 11 do
     write i * 2
     i := i + 1
-endwhile
+end
 ```
+
+---
+
+## Què passa amb les funcions?
+
+.cols5050[
+.col1[
+Imagineu una llenguatge tipus:
+
+```
+function sm(x, y)
+    return x + y
+end
+
+main
+    a := 1 + 2 
+    b := a * 2
+    write sm(a, b)
+end
+```
+
+amb només:
+
+* variables locals 
+
+* paràmetres per valor
+]
+.col2[
+Qüestions a tenir en compte:
+
+.small[
+1. La taula de símbols pot ser una *pila de diccionaris*.
+
+2. En *visitar* la declaració de funcions hem de guardar en una estructura per a cada funció:
+  * Nom (*id*)
+  * Llista de paràmetres (*ids*)
+  * El contexte del bloc de codi (per a poder fer un `self.visit(bloc)` en trobar la crida)
+
+3. S'ha de gestionar el `return` en cascada.
+]
+]]
+
+## Exercici 8
+
+Amplieu l'exercici anterior per a incloure funcions d'aquest tipus.
+
+---
+
+## Exercici 9
+
+Comproveu que el vostre programa funciona amb recursivitat:
+
+```
+function fibo(n)
+    if n = 0 then
+        return 0
+    end
+    if n = 1 then
+        return 1
+    end
+    return fibo(n-1) + fibo(n-2)
+end
+
+main
+    a := 1
+    while a <> 7 do
+        write fibo(a)
+        a := a + 1
+    end
+end
+```
+
+
 
 ---
 
