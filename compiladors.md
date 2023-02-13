@@ -325,12 +325,12 @@ token_stream = CommonTokenStream(lexer)
 parser = exprsParser(token_stream)
 tree = parser.root()
 
-# print(parser.getNumberOfSyntaxErrors(), 'errors de sintaxi.')
-# print(tree.toStringTree(recog=parser))
-
 if parser.getNumberOfSyntaxErrors() == 0:
   visitor = TreeVisitor()
   visitor.visit(tree)
+else:
+  print(parser.getNumberOfSyntaxErrors(), 'errors de sintaxi.')
+  print(tree.toStringTree(recog=parser))
 ```
 
 ---
