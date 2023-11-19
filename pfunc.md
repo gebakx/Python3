@@ -123,31 +123,56 @@ f = fib2()
 
 # Generadors III
 
-i classes:
-
+.cols5050[
+.col1[
+classe amb generador:
 ```python3
-class fib3:
-    def __init__(self, n):
-        self.final = n
-        
-    def __iter__(self):
-        a = 0
-        yield a
-        b = 1
+class fib:
+    def \_\_iter\_\_(self):
+        a, b = 0, 1
         while True:
-            if b <= self.final:
-                yield b
-                a, b = b, a + b
-            else:
-                raise StopIteration
+            yield b
+            a, b = b, a + b
 ```
 
 ```python3
-[x for x in fib3(8)]
+for (i, x) in enumerate(fib(), 1):
+    if i > 10:
+        break
+    print(i, x)
 👉
-[0, 1, 1, 2, 3, 5, 8]
+1 1
+2 1
+3 2
+4 3
+5 5
+6 8
 ```
-
+]
+.col2[
+classe amb generador i iterador:
+```python3
+class fib2:
+    def \_\_init\_\_(self):
+        self.gen = self.\_\_iter\_\_()
+```
+```python3
+    def \_\_next\_\_(self):
+        return next(self.gen)
+```
+```python3
+    def \_\_iter\_\_(self):
+        a, b = 0, 1
+        while True:
+            yield b
+            a, b = b, a + b
+```
+```python3
+f = fib2()
+print([next(f) for \_ in range(6)])
+👉  [1, 1, 2, 3, 5, 8]
+```
+]]
 Són útils quan volem tenir varies instàncies del generador funcionant a l'hora.
 
 ---
