@@ -36,8 +36,8 @@ def fib(n):
 ```python3
 test(fib, 40)
 👉
-valor: 102334155
-temps(s): 27.68606
+f(40) = 102334155
+temps(s): 30.437519
 ```
 ]
 .col2[
@@ -53,8 +53,8 @@ def efib (n, mem={0:0, 1:1}):
 ```python3
 test(efib, 40)
 👉
-valor: 102334155
-temps(s): 0.00013
+f(40) = 102334155
+temps(s): 0.000059
 ```
 ]
 ]
@@ -68,19 +68,16 @@ Python3 accepta funcions niuades.
 Un exemple és la funció `test` de l'exemple anterior. Conté una funció `prec` a dins seu.
 
 ```python3
-from ttictoc import TicToc
+from pytictoc import TicToc
 
 def test(f, n):
-
     def prec(x):
-        return '{:.5f}'.format(x)
+        return '{:.6f}'.format(x)
 
-    t = TicToc() ## TicToc("name")
-    t.tic();
-    valor = f(n)
-    t.toc();
-    print('valor:', valor)
-    print('temps(s):', prec(t.elapsed))
+    t = TicToc()
+    t.tic()
+    print('f(', n,') = ', f(n), sep='')
+    print('temps(s):', prec(t.tocvalue()))
 ```
 
 ---
@@ -104,8 +101,8 @@ def efib2(x):
 ```python3
 test(efib2, 40)
 👉
-valor: 102334155
-temps(s): 0.00012
+f(40) = 102334155
+temps(s): 0.000036
 ```
 
 
@@ -118,15 +115,13 @@ Una clausura (*closure*) és una mena funció *callback*.
 ```python3
 def test(n):
     def prec(x):
-        return '{:.5f}'.format(x)
+        return '{:.6f}'.format(x)
 
     def clausura(f):
-        t = TicToc() ## TicToc("name")
+        t = TicToc()
         t.tic();
-        valor = f(n)
-        t.toc();
-        print('valor:', valor)
-        print('temps(s):', prec(t.elapsed))
+        print('f(', n,') = ', f(n), sep='')
+        print('temps(s):', prec(t.tocvalue()))
 
     return clausura
 ```
@@ -135,8 +130,9 @@ def test(n):
 test40 = test(40)
 test40(efib)
 👉
-valor: 102334155
-temps(s): 0.00020
+f(40) = 102334155
+temps(s): 0.000036
+
 ```
 
 S'utilitzen per amagar dades (*data hiding*) i evitar així les variables globals.
@@ -170,8 +166,8 @@ test40 = test(40)
 fib = memoritza(fib)
 test40(fib)
 👉
-valor: 102334155
-temps(s): 0.00018
+f(40) = 102334155
+temps(s): 0.000051
 ```
 
 ---
@@ -213,8 +209,8 @@ fib(1) = 1
 fib(3) = 2
 fib(2) = 1
 fib(4) = 3
-valor: 3
-temps(s): 0.11166
+f(4) = 3
+temps(s): 0.000035
 ```
 ]
 ]
@@ -263,8 +259,8 @@ fib(37) = 24157817
 fib(39) = 63245986
 fib(38) = 39088169
 fib(40) = 102334155
-valor: 102334155
-temps(s): 0.13049
+f(40) = 102334155
+temps(s): 0.000078
 ```
 ]
 ]
